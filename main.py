@@ -45,9 +45,10 @@ def main_menu() -> None:
   [3]  Tu vs Calculator - Mediu (Inteligent)
   [4]  Tu vs Calculator - Imbatabil (Minimax AI)
   [5]  Instrucțiuni de joc
+  [6]  🌐 Pornește Serverul Web (Interfață Grafică)
   [0]  Ieșire (Exit)
 """)
-        choice = input("Selectează o opțiune [0-5]: ").strip()
+        choice = input("Selectează o opțiune [0-6]: ").strip()
 
         if choice == '1':
             controller.play_pvp()
@@ -59,11 +60,15 @@ def main_menu() -> None:
             controller.play_vs_ai(difficulty="hard")
         elif choice == '5':
             show_instructions()
+        elif choice == '6':
+            from server import start_server
+            start_server()
         elif choice in ['0', 'q', 'exit', 'quit']:
             print("\nMulțumim pentru joc! La revedere! 👋\n")
             sys.exit(0)
         else:
-            print("⚠️ Opțiune invalidă! Alege o cifră între 0 și 5.")
+            print("⚠️ Opțiune invalidă! Alege o cifră între 0 și 6.")
+
 
 
 if __name__ == "__main__":

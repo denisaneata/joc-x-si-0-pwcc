@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jocul X și 0 (Tic-Tac-Toe)</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-decorations">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <main class="container">
+        <!-- Antet -->
+        <header class="app-header">
+            <div class="logo-group">
+                <div class="logo-badge">
+                    <span class="x-glyph">✕</span>
+                    <span class="o-glyph">◯</span>
+                </div>
+                <div>
+                    <h1 class="app-title">X și 0</h1>
+                    <p class="app-subtitle">Clasicul Tic-Tac-Toe reimaginat</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button id="sound-toggle" class="btn-icon" aria-label="Comută sunetul" title="Comută sunetul">
+                    <span id="sound-icon">🔊</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Selector Mod de Joc -->
+        <section class="controls-panel">
+            <div class="segmented-control" role="group" aria-label="Mod de joc">
+                <button id="mode-ai" class="segment-btn active" data-mode="ai">
+                    <span class="icon">🤖</span> vs Calculator
+                </button>
+                <button id="mode-pvp" class="segment-btn" data-mode="pvp">
+                    <span class="icon">👥</span> 2 Jucători
+                </button>
+            </div>
+
+            <!-- Setări AI (vizibile doar în modul AI) -->
+            <div id="ai-settings" class="sub-controls">
+                <div class="control-row">
+                    <label for="ai-difficulty" class="control-label">Dificultate:</label>
+                    <div class="difficulty-group">
+                        <button class="diff-btn" data-diff="easy">Ușor</button>
+                        <button class="diff-btn" data-diff="medium">Mediu</button>
+                        <button class="diff-btn active" data-diff="hard">Imbatabil 🧠</button>
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <label class="control-label">Joci cu:</label>
+                    <div class="symbol-selector">
+                        <button class="symbol-btn active" data-symbol="X">
+                            <span class="x-color">X</span> (Începi primul)
+                        </button>
+                        <button class="symbol-btn" data-symbol="O">
+                            <span class="o-color">O</span> (AI începe)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabela de Scor -->
+        <section class="score-board">
+            <div class="score-card player-x" id="card-x">
+                <div class="score-role" id="label-x">Jucător 1 (X)</div>
+                <div class="score-value" id="score-x">0</div>
+                <div class="turn-indicator">Rândul tău</div>
+            </div>
+            <div class="score-card ties" id="card-ties">
+                <div class="score-role">Remize</div>
+                <div class="score-value" id="score-ties">0</div>
+                <div class="turn-indicator">&mdash;</div>
+            </div>
+            <div class="score-card player-o" id="card-o">
+                <div class="score-role" id="label-o">Calculator (O)</div>
+                <div class="score-value" id="score-o">0</div>
+                <div class="turn-indicator">Gândește...</div>
+            </div>
+        </section>
+
+        <!-- Mesaj Stare Joc -->
+        <div class="status-banner" id="status-banner">
+            <span id="status-text">Rândul jucătorului <strong>X</strong></span>
+        </div>
+
+        <!-- Tabla de Joc -->
+        <div class="board-wrapper">
+            <div class="board" id="board" role="grid" aria-label="Tabla de joc X și 0">
+                <button class="cell" data-index="0" aria-label="Căsuța 1" role="gridcell"></button>
+                <button class="cell" data-index="1" aria-label="Căsuța 2" role="gridcell"></button>
+                <button class="cell" data-index="2" aria-label="Căsuța 3" role="gridcell"></button>
+                <button class="cell" data-index="3" aria-label="Căsuța 4" role="gridcell"></button>
+                <button class="cell" data-index="4" aria-label="Căsuța 5" role="gridcell"></button>
+                <button class="cell" data-index="5" aria-label="Căsuța 6" role="gridcell"></button>
+                <button class="cell" data-index="6" aria-label="Căsuța 7" role="gridcell"></button>
+                <button class="cell" data-index="7" aria-label="Căsuța 8" role="gridcell"></button>
+                <button class="cell" data-index="8" aria-label="Căsuța 9" role="gridcell"></button>
+            </div>
+            <!-- Linie animată peste căsuțele câștigătoare -->
+            <svg class="winning-line-svg" id="winning-line-svg">
+                <line id="winning-line" x1="0" y1="0" x2="0" y2="0" />
+            </svg>
+        </div>
+
+        <!-- Butoane de Acțiuni -->
+        <div class="actions-group">
+            <button id="btn-restart" class="btn btn-primary">
+                <span class="btn-icon-symbol">🔄</span> Runda Nouă
+            </button>
+            <button id="btn-reset-score" class="btn btn-secondary">
+                <span class="btn-icon-symbol">🗑️</span> Resetează Scor
+            </button>
+        </div>
+
+        <!-- Ajutor Tastatură -->
+        <footer class="app-footer">
+            <p class="keyboard-hint">💡 <em>Sfat:</em> Poți folosi tastele <strong>1 - 9</strong> de pe tastatură pentru a plasa simbolul, iar <strong>R</strong> pentru o nouă rundă.</p>
+        </footer>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
